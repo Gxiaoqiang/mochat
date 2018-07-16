@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<title>微信扫码后台登录模板</title>
+<link type="text/css" rel="stylesheet" href="./login/css/login.css">
+<link type="text/css" rel="stylesheet" href="./lib/layui/css/layui.css">
+<script type="text/javascript" src="./lib/jquery.1.11.0.min.js"></script>
+<script type="text/javascript" src="./common/HTTPUtil.js"></script>
+<script type="text/javascript" src="./login/js/login.js"></script>
+<script type="text/javascript" src="./common/chat.common.js"></script>
+</head>
+<body style="overflow: hidden">
+	<div class="pagewrap">
+		<div class="main">
+			<div class="header layui-layout layui-layout-admin"></div>
+			<div class="content">
+				<div class="con_left"></div>
+				<div class="con_right">
+					<div class="con_r_top">
+						<a href="javascript:;" class="left"
+							style="color: rgb(153, 153, 153); border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: rgb(222, 222, 222);">关注我们</a>
+						<a href="javascript:;" class="right"
+							style="color: rgb(51, 51, 51); border-bottom-width: 2px; border-bottom-style: solid; border-bottom-color: rgb(46, 85, 142);">登录管理</a>
+					</div>
+					<ul>
+						<li class="con_r_left" style="display: none;">
+							<div class="erweima">
+								<div class="qrcode">
+									<div id="output" style="width: 100%; position: relative">
+										<img src="login/img/2weima.jpg"
+											style="width: 174px; height: 174px">
+									</div>
+								</div>
+							</div>
+							<div style="height: 70px">
+								<p>微信扫码 安全便捷</p>
+							</div>
+						</li>
+						<li class="con_r_right login" style="display: block;">
+								<div class="user">
+									<div>
+										<span class="user-icon"></span> <input type="text" id="userid"
+											name="userid" placeholder="　输入账号" value="">
+									</div>
+
+									<div>
+										<span class="mima-icon"></span> <input type="password"
+											id="pwd" name="pwd" placeholder="　输入密码" value="">
+									</div>
+									<div>
+										<span class="yzmz-icon"></span> <input id="vdcode" type="text"
+											name="validate" placeholder="　验证码" value=""
+											style="width: 150px;"> 
+											<img style="cursor: pointer;" class="verification" alt="看不清？点击更换"
+											src>
+									</div>
+								</div>
+								<br>
+								<button id="btn_Login" type="submit">登 录</button>
+								<a href="#" class="reginster" style="padding-left: 30px;color: darkgrey;font-style: initial;">注册</a>
+						</li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="text-align: center;" ></div>
+	<form  id='user_form' method='get' style='display:none'>
+	 <input name="random" id = "random" type="hidden"/>
+	</form>
+	<script type="text/javascript">
+	 $(document).ready(function(){
+		$.fn.login.init(); 
+	 })
+	</script>
+</body>
+</html>

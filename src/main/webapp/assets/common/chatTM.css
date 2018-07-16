@@ -1,0 +1,119 @@
+/*界面样式*/
+
+#topBiankuang {
+    margin: 10%auto;
+    padding: 10px 10px;
+    /*border-style: dashed;*/
+    /*height: 500px;
+    width: 870px;*/
+    height: 500px;
+    width: 100%;
+}
+/** 聊天界面整个边框*/
+#left {
+    height: 500px;
+    width: 600px/*40%*/;
+    float: right;
+    position: relative;
+    z-index: 997;
+}
+/** 正在对话列表 */
+#left-left {
+    height: 100%;
+    width: 15%;
+    float: left;
+}
+/** 正在对话列表 右边的 聊天界面 边框*/
+#left-right {
+    height: 100%;
+    width: 100%;
+    float: right;
+}
+
+
+/**聊天界面-头部信息*/
+#left-right-top {
+    height: 10%;
+    width: 100%;
+    float: left;
+}
+/**聊天界面-头部下方的边框*/
+#left-right-down{
+    height: 90%;
+    width: 100%;
+    float: left;
+}
+/** 聊天界面中的 聊天记录和输入界面- **/
+#left-right-down-left{
+    height: 100%;
+    width: 70%;
+    float: left;
+}
+#left-right-down-left-message {
+    height: 70%;
+    width: 100%;
+    float: left;
+}
+/** 文本输入框*/
+#left-right-down-left-inpit {
+    height: 22%;
+    width: 100%;
+    float: left;
+}
+/** 文本输入框下面的按钮组*/
+#left-right-down-left-btn {
+    height: 8%;
+    width: 100%;
+    float: right;
+}
+
+/** 聊天界面中的右边展示信息**/
+#left-right-down-right {
+    height: 100%;
+    width: 30%;
+    float: right;
+}
+/** 通知公告*/
+#left-right-down-right_noticeGJ {
+    height: 30%;
+}
+/** 公告内容*/
+#left-right-down-right_notice{
+    height: 100%;
+}
+/** 在线人数统计*/
+#left-right-down-right-onlineListGJ {
+    height: 5%;
+}
+/** 在线列表*/
+#left-right-down-right_listGJ {
+    height: 65%;
+    overflow-y:auto;
+    position:inherit ;
+    word-wrap:break-word;
+}
+
+/** 个人列表面板*/
+#right {
+    height: 500px;
+    width: 270px;
+    float: right;
+    z-index: 998;
+    margin-right: 100px;
+}
+#right-top{
+    height: 10%;
+    width: 100%;
+}
+#right-down{
+    height: 90%;
+    width: 100%;
+}
+
+/* 消息滚动屏*/
+#msg {
+    height:100%;
+    overflow-y:auto;
+    position:inherit ;
+    word-wrap:break-word;
+}

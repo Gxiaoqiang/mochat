@@ -1,0 +1,489 @@
+html, body {
+    font-family: "Microsoft YaHei", "Î¢ÈíÑÅºÚ";
+    padding: 0;
+    margin: 0;
+    height: 100%;
+    width: 100%;
+    background-color: #d3ceca;
+}
+
+::-webkit-scrollbar {
+    width: 0px;
+    height: 1px;
+}
+
+::-webkit-scrollbar-thumb {
+    border-radius: 5px;
+    -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.2);
+    background: rgba(0, 0, 0, 0.2);
+}
+
+.main {
+    height: 100%;
+    width: 100%;
+    background-image: url(../image/chat/bg.jpg);
+    background-attachment: fixed;
+    background-size: 100% 100%;
+    background-repeat: repeat;
+    background-position: 0 0;
+    /*background-attachment: scroll;
+            overflow-x: hidden;
+            overflow-y: scroll !important;*/
+}
+
+.logoContent {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    height: 60%;
+    margin: auto;
+    z-index: 999;
+}
+
+.logoimg{
+    cursor:pointer;
+}
+
+.logoheader {
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-color: transparent;
+    line-height: 70px;
+    cursor: pointer;
+}
+
+.logo img {
+    width: 180px;
+}
+
+.slogan {
+    font-size: 32px;
+    color: #ff0951;
+    font-weight: bold;
+}
+
+
+.buttons {
+    padding-top: 150px;
+    text-align: center;
+}
+
+    .buttons input {
+        color: #ff0951;
+        font-size: 40px;
+        background-color: transparent;
+        padding: 10px 30px;
+        border-radius: 4px;
+        border: 1px solid #ff0951;
+        cursor: pointer;
+    }
+
+
+.sexlabel {
+    margin: 20px 20px 0 0;
+    display: inline-block;
+    cursor: pointer;
+}
+
+.sexradio {
+    display: none
+}
+
+.sexradioInput {
+    background-color: #fff;
+    border: 1px solid rgba(0,0,0,0.15);
+    border-radius: 100%;
+    display: inline-block;
+    height: 20px;
+    margin-right: 10px;
+    margin-top: -1px;
+    vertical-align: middle;
+    width: 20px;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.sexradio:checked + .sexradioInput:after {
+    background-color: #57ad68;
+    border-radius: 100%;
+    content: "";
+    display: inline-block;
+    height: 16px;
+    margin: 2px;
+    width: 16px
+}
+#messages {
+    margin: 0 auto;
+    max-width: 750px;
+    background-color: rgba(255,255,255,0.2);
+    border-radius: 10px 10px 0px 0px;
+    height: 100%;
+    padding-left: 10px;
+    padding-right: 10px;
+    display: none;
+}
+#messages div.me, #messages div.stranger {
+        margin: 0 0 0.5em;
+        border-radius: 1em;
+        padding: 0.5em 1em;
+        background-color: #e5e5ea;
+        max-width: 85%;
+        clear: both;
+        position: relative;
+        word-wrap: break-word;
+        display: block;
+    }
+
+    #messages div.system {
+        margin: 0 auto;
+        text-align: center;
+        padding-top: 10px;
+        clear: both;
+        position: relative;
+        color: red;
+    }
+
+    #messages div.stranger {
+        float: left;
+        margin-left: 8px;
+        margin-bottom:15px;
+    }
+
+        #messages div.stranger.text::after {
+            content: "";
+            position: absolute;
+            left: -0.5em;
+            bottom: 0;
+            width: 0.5em;
+            height: 1em;
+            border-right: 0.5em solid #e5e5ea;
+            border-bottom-right-radius: 1em 0.5em
+        }
+
+    #messages div.me {
+        float: right;
+        background-color: #868686;
+        color: white;
+        margin-right: 8px
+    }
+
+        #messages div.me.local {
+            background-color: rgba(255,93,56,0.66)
+        }
+
+        #messages div.me.text::after {
+            content: "";
+            position: absolute;
+            right: -0.5em;
+            bottom: 0;
+            width: 0.5em;
+            height: 1em;
+            border-left: 0.5em solid #868686;
+            border-bottom-left-radius: 1em 0.5em
+        }
+
+        #messages div.me.text.local::after {
+            content: none;
+            border-left: 0.5em solid rgba(255,93,56,0.5)
+        }
+
+    #messages div.text {
+        line-height: 1.35;
+        text-align: left;
+    }
+
+    #messages > div.image {
+        max-width: 80%;
+        padding: 0;
+        background-color: transparent !important
+    }
+
+    #messages > div.audio {
+        width: 70px;
+        height: 70px;
+        padding: 0
+    }
+
+    #messages div.text.image::after, #messages div.text.audio::after {
+        width: 0;
+        height: 0
+    }
+
+    #messages div.image div.comment {
+        bottom: 10px !important
+    }
+
+.timediff {
+    color: #AAA;
+    border-radius: 0
+}
+
+.read {
+    display: none
+}
+
+.me.text:last-child .read {
+    display: inline
+}
+
+.local .read {
+    display: none !important
+}
+
+.mobile {
+    display: none
+}
+
+.typing {
+    color: #AAA !important;
+    float: left;
+    display: block
+}
+
+#messages div.comment {
+    position: absolute;
+    bottom: 0px;
+    margin: 0 2px;
+    background-color: transparent;
+    border: 0;
+    color: #AAA;
+    font-size: 12px;
+    padding: 0px;
+    width: 48px
+}
+
+#messages div.stranger.comment {
+    right: -53px;
+    text-align: left
+}
+
+#messages div.me.comment {
+    left: -53px;
+    text-align: right
+}
+
+#messages > div.loadMoreButton {
+    background-color: transparent;
+    margin: 0;
+    border-radius: 0;
+    padding: 0.5em 1em;
+    max-width: 100%;
+    text-align: center
+}
+
+#messages input {
+    color: #ff0951;
+    font-size: 16px;
+    background-color: transparent;
+    padding: 5px;
+    border-radius: 4px;
+    border: 1px solid #ff0951
+}
+
+.hidden_text {
+    font-size: 0px
+}
+
+
+
+.messageaction {
+    width: 100%;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    display: none;
+}
+
+.mianban {
+    height: 55px;
+    padding-top: 5px;
+    background-color: rgba(255,255,255,0.5);
+}
+
+.state {
+    height: 20px;
+    width: 100%;
+    margin-bottom: 5px;
+    color: #2b89d1;
+    font-size: 12px;
+}
+
+.connection_action {
+    float: left;
+    width: 55px;
+    text-align: right;
+}
+
+.connectButton {
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #ff0951;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    outline: none;
+     cursor: pointer;
+}
+
+.message_action {
+    overflow: hidden;
+    text-align: left;
+}
+
+.senddiv {
+    margin-left: 10px;
+    margin-right: 13px;
+    padding-top: 2px;
+}
+
+.inputNormal {
+    height: 40px;
+    width: 100%;
+    font-size: 14px;
+    font-weight: bold;
+    border-radius: 5px;
+    outline: none;
+}
+
+
+.send_action {
+    float: right;
+    width: 55px;
+    text-align: left;
+}
+
+.sendButton {
+    font-size: 16px;
+    text-align: center;
+    color: white;
+    font-weight: bold;
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #ff5e3a;
+    border-radius: 10px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    outline: none;
+    cursor:pointer;
+}
+
+
+.messageshow {
+    position: absolute;
+    top: 0px;
+    bottom: 60px;
+    width: 100%;
+    overflow: auto;
+    text-align: center;
+}
+
+
+.systemName {
+    font-weight: bold;
+    color: #000;
+}
+
+.logoMessage {
+    padding-top: 15px;
+}
+
+
+.systemMessage {
+    color: blue;
+    padding-left: 15px;
+    padding-right: 15px;
+    padding-top: 15px;
+    margin-top: 0px;
+    font-size: 15px;
+}
+
+.disconnectMessage {
+    padding-left: 6px;
+    padding-top: 6px;
+    color: #08c015;
+}
+
+    .disconnectMessage b {
+        font-size: 12px;
+        color: red;
+        cursor: pointer;
+    }
+
+.disconnectaction {
+    padding-left: 6px;
+    padding-top: 6px;
+    font-size: 12px;
+    color: #7e7e7e;
+}
+
+    .disconnectaction b {
+        font-size: 12px;
+        color: red;
+        cursor: pointer;
+    }
+
+.connectsystemMessage {
+    padding-left: 6px;
+    padding-top: 6px;
+    color: #08c015;
+}
+
+.connectSuccessMessage {
+    margin-top: 10px;
+    color: #7e7e7e;
+    font-size: 12px;
+}
+
+    .connectSuccessMessage b {
+        color: #08c015;
+    }
+
+
+.conversation_divider {
+    margin-top: 2px;
+    color: #AAA;
+}
+
+
+
+.bottom {
+    bottom: 0px;
+    height: 1px;
+    width: 100%;
+    position: absolute;
+}
+
+.logoMessage img {
+    width: 60px;
+}
+.show .find:hover{
+	cursor:pointer;
+	background-color: yellowgreen;
+    border-radius: 10px;
+}
+@media (max-width: 640px) {
+    .logo img {
+        width: 90px;
+    }
+
+    .slogan {
+        font-size: 18px;
+    }
+
+    .logoheader {
+        line-height: 40px;
+    }
+
+    .logoContent {
+        height: 40%;
+    }
+}

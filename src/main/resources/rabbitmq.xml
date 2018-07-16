@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>  
+<beans xmlns="http://www.springframework.org/schema/beans"  
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"  
+    xmlns:rabbit="http://www.springframework.org/schema/rabbit"  
+    xsi:schemaLocation="  
+        http://www.springframework.org/schema/beans   
+        http://www.springframework.org/schema/beans/spring-beans-3.1.xsd  
+        http://www.springframework.org/schema/context   
+        http://www.springframework.org/schema/context/spring-context-3.1.xsd  
+        http://www.springframework.org/schema/rabbit   
+        http://www.springframework.org/schema/rabbit/spring-rabbit-1.3.xsd"
+        default-lazy-init="false">  
+
+        <context:property-placeholder location="classpath*:rabbitmq-home.properties" />
+
+    <!--配置connection-factory，指定连接rabbit server参数-->
+    <!-- <rabbit:connection-factory  id="connectionFactory" username="${spring.rabbitmq.username}" password="${spring.rabbitmq.password}"
+                               publisher-confirms="${spring.rabbitmq.publisher-confirms}"
+                               host="${spring.rabbitmq.host}"
+                               port="${spring.rabbitmq.port}"
+                               virtual-host="${spring.rabbitmq.virtual-host}"/> -->
+    <!--通过指定下面的admin信息，当前producer中的exchange和queue会在rabbitmq服务器上自动生成-->
+    <!-- <rabbit:admin connection-factory="connectionFactory"/> -->
+    <bean name="clientConnection" id = "clientConnection" class="com.rabbitmq.client.ConnectionFactory">
+      <property name="username" value="${spring.rabbitmq.username}" />
+      <property name="password" value="${spring.rabbitmq.password}" />
+      <property name="virtualHost" value="${spring.rabbitmq.virtual-host}" />
+      <property name="host" value="${spring.rabbitmq.host}" />
+      <property name="port" value="${spring.rabbitmq.port}" />
+    </bean>
+  <!--   <rabbit:direct-exchange name="myChange" durable="true" auto-delete="false">
+        <rabbit:bindings>
+       </rabbit:bindings>
+    </rabbit:direct-exchange>
+    <rabbit:template id="amqpTemplate" connection-factory="connectionFactory" exchange="myChange" />
+     -->
+</beans>

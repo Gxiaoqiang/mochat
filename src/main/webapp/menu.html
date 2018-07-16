@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="X-UA-Compatible" content="IE=Edge">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>随机聊天,碰见偶然！</title>
+<meta name="viewport"
+	content="user-scalable=no, initial-scale=1.0, maximum-scale=1.0">
+<link href="./random/css/layer.css" rel="stylesheet">
+<link href="./random/css/chat.css" rel="stylesheet">
+<link href="./common/css/header.css" rel="stylesheet">
+<script src="./lib/jquery.1.11.0.min.js"></script>
+<script src="./lib/layer/layer.js"></script>
+<script type="text/javascript" src="./common/chat.common.js"></script>
+<script type="text/javascript" src="./common/HTTPUtil.js"></script>
+<script type="text/javascript" src="./common/header.js"></script>
+</head>
+<body>
+	<div class="main">
+	    <div class="header"></div>
+		<div class="show" id="loading" style="display: block;">
+			<div class="logoContent">
+				<div class="logoheader">
+					<div class="logo">
+						<img class="logoimg" alt="随机聊，碰到缘分！" src="random/image/chat/chat.png">
+					</div>
+					<div>
+						<span class="find random"
+							style="font-size: 32px; color: #ff0951; font-weight: bold;">查找聊天对象</span></br>
+						<span class="find room "
+							style="font-size: 32px; color: #ff0951; font-weight: bold;" roomId = "123456">聊天室</span>
+					</div>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<form action="menu.html" id='user_form' method='post' style='display:none'>"
+	  <input type=hidden name='userEmail' id='userEmail' />
+	</form>
+	<script>
+		$(document).ready(function() {
+			var random = mochat.utils.getQueryString("random");
+			var baseURL = mochat.utils.baseURL();
+			$.get(baseURL+"/header.html",function(result){
+				$(".header").html(result);
+				$(".header .li-menu").hide();
+				$.fn.header.init();
+			});
+			$(".logoheader").on("click",".random",function(e){
+				window.location.href="random/mochat.html?random="+random;
+			});
+            $(".logoheader").on("click",".room",function(e){
+            	var roomId = $(this).attr("roomId");
+				window.location.href="chatroom/chatroom.html?random="+random+"&room="+roomId;
+			});
+		});
+	</script>
+</body>
+</html>
