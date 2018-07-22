@@ -66,7 +66,7 @@
     var baseUrl = function(flag) {
 		var x = window.location.href.split("/");
 		if(flag != null||flag != undefined){
-			return  x[2] + "/" + x[3] + "/";
+			return  x[2] ;
 		}
 		return x[0] + "//" + x[2] + "/" + x[3] + "/";
 	};
