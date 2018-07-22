@@ -39,10 +39,61 @@ public class UserInfo extends CommonPojo implements Serializable{
     
     private String roomId;
     
+    private String sex;
+    
+    private String userStatus;
     
     
     
     
+    public String getUserStatus() {
+		return userStatus;
+	}
+
+	public void setUserStatus(String userStatus) {
+		this.userStatus = userStatus;
+	}
+
+	public String getSex() {
+		return sex;
+	}
+
+	public void setSex(String sex) {
+		this.sex = sex;
+	}
+
+	private String srand;
+	
+	private String rePassWord;
+	
+	private String vCode;
+
+	public String getSrand() {
+		return srand;
+	}
+
+	public void setSrand(String srand) {
+		this.srand = srand;
+	}
+
+	public String getRePassWord() {
+		return rePassWord;
+	}
+
+	public void setRePassWord(String rePassWord) {
+		this.rePassWord = rePassWord;
+	}
+
+	public String getvCode() {
+		return vCode;
+	}
+
+	public void setvCode(String vCode) {
+		this.vCode = vCode;
+	}
+	
+
+
 	public String getRoomId() {
 		return roomId;
 	}

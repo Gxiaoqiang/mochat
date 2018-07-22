@@ -1,11 +1,13 @@
 package com.mochat.mapper;
 
+import java.util.List;
+
 import com.mochat.model.ChatRoom;
 import com.mochat.model.UserInfo;
 
 public interface LoginMapper {
 
-	public UserInfo getUserInfo(UserInfo userInfo);
+	public List<UserInfo> getUserInfo(UserInfo userInfo);
 	
 	public void userRegister(UserInfo userInfo);
 	

@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>聊天室</title>
+<meta name="viewport"
+	content="width=device-width,height=device-height,inital-scale=1.0,maximum-scale=1.0,user-scalable=no;" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+<META HTTP-EQUIV="Pragma" CONTENT="no-cache">
+<META HTTP-EQUIV="Cache-Control" CONTENT="no-cache">
+<META HTTP-EQUIV="Expires" CONTENT="0">
+<link rel="stylesheet" type="text/css" href="./css/mlrcn.css">
+<link rel="stylesheet" type="text/css" href="./css/layer.css" />
+<link rel="stylesheet" type="text/css" href="./css/chat.css" />
+<link href="../lib/jquery-ui/jquery-ui-1.10.3.custom.css" />
+<link href="../common/css/header.css" rel="stylesheet">
+<script src="../lib/jquery.1.11.0.min.js"></script>
+<script src="../lib/jquery-ui/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="../common/chat.common.js"></script>
+<script src="../lib/layer/layer.js"></script>
+<script src="./js/iscroll.js"></script>
+<script type="text/javascript" src="./js/room.js"></script>
+<script type="text/javascript" src="../common/HTTPUtil.js"></script>
+<script type="text/javascript" src="../common/header.js"></script>
+</head>
+<body class="black" >
+    <div class="header"></div>
+	<div id="bgAllImage">
+		<img id="bg_img" value="1" class="bgAllImage" src="./image/3.jpg">
+	</div>
+	<div class="wrap">
+		<div id="main_container" style="display: block;">
+			<div class="panel main-panel" id="panel-0"
+				style="display: block; transition: -webkit-transform 0.4s cubic-bezier(0, 1, 0, 1); transform: translate3d(0px, 0px, 0px);">
+				<div id="panelBodyWrapper-0" class="panel_body_container"
+					style="bottom: 50px;">
+					<div id="panelBody-0" class="panel_body ">
+						<div id="mainTopAll" cmd="void">
+							<div class="accountHeader">
+								<div class="avatar_wrap sb">
+									<img id="avatar_head_img" src="./image/nan.jpg" width="40"
+										height="40">
+								</div>
+								<span id="endit_userinfo" class="text_ellipsis user_nick sb">XIAOQIANG</span>
+
+								<div class="icons_list icons_top">
+									<a href="#" class="star" title="等级：1">等级1</a>
+								</div>
+							</div>
+						</div>
+						<div class="panel selected" id="panel-1">
+							<header id="panelHeader-1" class="panel_header">
+								<h1 id="panelTitle-1" class="text_ellipsis padding_20">当前在线</h1>
+							</header>
+							<div id="panelBodyWrapper-1" class="panel_body_container"
+								style="top: 45px; overflow: auto;">
+								<div id="panelBody-1" class="panel_body ">
+									<div id="current_chat_scroll_area" class="scrollWrapper"
+										cmd="void">
+										<ul id="current_chat_list" class="list list_white"
+											style="transition-property: -webkit-transform; transform-origin: 0px 0px 0px; transform: translate(0px, 0px) translateZ(0px);">
+											<li class="list_item" cmd="0" nicename="随机聊天" type="1">
+												<a href="javascript:void(0);" class="avatar"><img
+													src="./image/random.jpg" class="avataronline"></a>
+												<p class="member_nick">
+													随机聊天<span></span>
+												</p> <!-- <p class="member_msg text_ellipsis">
+													<span class="member_state">[匿名]</span><span
+														class="member_signature">和陌生人随机聊天</span>
+												</p> -->
+											</li>
+										</ul>
+									</div>
+								</div>
+								<ul id="pannelMenuList-1" class="pannel_menu_list"></ul>
+							</div>
+
+						</div>
+
+					</div>
+					<ul id="pannelMenuList-0" class="pannel_menu_list"></ul>
+				</div>
+
+				<footer id="panelFooter-0" cmd="未知">
+					<nav id="nav_tab" cmd="void">
+						<ul class="nav_tab_head">
+							<li id="session" class="contact selected" cmd="clickNav"
+								param="session" style="width: 23%; float: left;"><a>
+									<div class="icon"></div> <span>会话</span>
+							</a></li>
+							<li id="contact" class="conversation" cmd="clickNav"
+								param="contact" style="width: 23%; float: left;"><a>
+									<div class="icon"></div> <span>聊天</span>
+							</a></li>
+							<li id="plugin" class="plugin" cmd="clickNav" param="plugin"
+								style="width: 23%; float: left;"><a>
+									<div class="icon"></div> <span>论坛</span>
+							</a></li>
+							<li id="setting" class="setup" cmd="clickNav" param="setting"
+								style="width: 23%; float: left;"><a>
+									<div class="icon"></div> <span>设置</span>
+							</a></li>
+						</ul>
+					</nav>
+				</footer>
+			</div>
+		</div>
+		<div id="container" class="container" style="display: block;">
+			<div class="panel chat-panel" id="panel-5" cmd="0" type="0"
+				style="transition: -webkit-transform 0.4s cubic-bezier(0, 1, 0, 1); transform: translate3d(0px, 0px, 0px); display: block;">
+				<header id="panelHeader-5" class="panel_header" style="display: block;">
+					<!--  <div id="panelLeftButton-5" class="btn btn_small btn_left btn_black btn_setting" cmd="0" type="0">
+                        <span id="panelLeftButton_name5" class="btn_text">断开</span>
+                    </div> -->
+					<h1 id="panelTitle-5" class="text_ellipsis padding_20"
+						style="width: 84%; float: left;">聊天室</h1>
+					<button id="close_window"
+						class="btn btn_small btn_right btn_black btn_setting"
+						cmd="clickRightButton" style="float: left;">
+						<span id="panelRightButtonText-5" class="btn_text">关闭</span>
+					</button>
+				</header>
+				<div id="yuyin_send_dh"></div>
+				<div id="panelBodyWrapper-5" class="panel_body_container"
+					style="top: 45px; bottom: 50px; overflow: auto">
+					<div id="panelBody-5" class="panel_body chat_container">
+						<div id="messages" style="display: block;"></div>
+					</div>
+				</div>
+				<footer id="panelFooter-5" class="chat_toolbar_footer">
+					<div class="chat_toolbar" style="height: 50px; display: block;">
+						<div id="add_input_btn" class="btn btn_yuyin"
+							style="float: left; width: 4%; padding-right: 9px;">
+							<span class="btn_img"></span>
+						</div>
+						<div id="add_photo_btn" class="btn btn_photo"
+							style="float: left; width: 4%; padding-right: 9px;">
+							<span class="btn_img"></span>
+						</div>
+						<div style="width: 70%; padding-right: 9px; float: left;">
+							<input id="chat_textarea" type="text"
+								class="input input_white chat_textarea" maxlength="130" style="">
+						</div>
+						<!-- <input id="chat_textarea" type="text" class="input input_white chat_textarea" maxlength="130" style="width:72%;float:left;padding-right:9px;"/> -->
+						<button id="chat_yuyin" class="input input_black chat_yuyin"
+							style="display: none;">
+							<span>按住说话</span>
+						</button>
+						<div id="add_face_btn" class="btn btn_face"
+							style="float: left; width: 4%; padding-right: 9px;">
+							<span class="btn_img"></span>
+						</div>
+
+						<button id="send_chat_btn" class="btn btn_small btn_blue"
+							style="display: inline-block; float: left;" cmd="0" type="0">
+							<span class="btn_text">发送</span>
+						</button>
+					</div>
+				</footer>
+			</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$(document).ready(function() {
+			var baseURL = mochat.utils.baseURL();
+	    	$.get(baseURL+"header.html",function(result){
+				$(".header").html(result);
+				$.fn.header.init();
+				$.fn.roomchat.init();
+			});
+		});
+	</script>
+</body>
+
+</html>

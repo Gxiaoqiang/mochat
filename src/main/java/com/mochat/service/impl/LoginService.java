@@ -1,5 +1,8 @@
 package com.mochat.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
@@ -14,11 +17,13 @@ import com.mochat.cache.VolitleValue;
 import com.mochat.constant.Constants;
 import com.mochat.constant.RedisConstants;
 import com.mochat.mapper.LoginMapper;
+import com.mochat.model.ResponseEntity;
 import com.mochat.model.UserInfo;
 import com.mochat.redis.CustomRedisClusters;
 import com.mochat.security.DataTokenUtils;
 import com.mochat.security.MD5Utils;
 import com.security.utils.SercurityToolUtils;
+import com.util.UUIDGenerator;
 
 import redis.clients.jedis.JedisCluster;
 
@@ -66,8 +71,6 @@ public class LoginService {
 		}
 		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
 		String passwdMd5 = DataTokenUtils.md5TokenBuilder(userInfo.getUserPassWord(),MD5Utils.secret);
-
-		
 		String userInfoStr = jedisCluster.get(userInfo.getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX);
 		if(userInfoStr != null) {
 			JSONObject jsonObject = JSONObject.parseObject(userInfoStr);
@@ -81,18 +84,18 @@ public class LoginService {
 		
 		userInfo.setUserPassWord(passwdMd5);
 		
-		UserInfo userInfo2 = loginInterface.getUserInfo(userInfo);
+		List<UserInfo> userInfo2 = loginInterface.getUserInfo(userInfo);
 		
-		if(userInfo2 == null) {
+		if(userInfo2 == null||userInfo2.size() == 0) {
 			return null;
 		}
-		setValueToCookie(response, request, userInfo2,  0);
-		userInfo2.setLoginTime(String.valueOf(System.currentTimeMillis()));
-		String userInfoStrTemp = JSONObject.toJSONString(userInfo2);
-		jedisCluster.set(userInfo2.getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
+		setValueToCookie(response, request, userInfo2.get(0),  0);
+		//userInfo2.get(0).setLoginTime(String.valueOf(System.currentTimeMillis()));
+		String userInfoStrTemp = JSONObject.toJSONString(userInfo2.get(0));
+		jedisCluster.set(userInfo2.get(0).getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
 
-		jedisCluster.set(userInfo2.getUserId()+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
-		return userInfo2;
+		jedisCluster.set(userInfo2.get(0).getUserId()+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
+		return userInfo2.get(0);
 	}
 	
 	private void setValueToCookie(HttpServletResponse httpResponse,
@@ -112,4 +115,47 @@ public class LoginService {
 		session.setAttribute(RedisConstants.USER_INFO_SUFFIX, userInfo);
 	}
 	
+	
+	public ResponseEntity<Boolean> register(UserInfo userInfo,HttpServletRequest request){
+		if(StringUtils.isEmpty(userInfo.getUserName())) {
+			return new ResponseEntity<Boolean>(false,null,"用户名称不能为空！");
+		}
+		if(StringUtils.isEmpty(userInfo.getEmail())) {
+			return new ResponseEntity<Boolean>(false,null,"用户邮箱不能为空！");
+		}
+		String rePassWord = userInfo.getRePassWord();
+		if(!StringUtils.equalsIgnoreCase(userInfo.getUserPassWord(), rePassWord)) {
+			return new ResponseEntity<Boolean>(false,null,"密码和确认密码不一致！");
+		}
+		String srand = userInfo.getSrand();
+		String vCode = userInfo.getvCode();
+		if(StringUtils.isEmpty(srand)) {
+			return new ResponseEntity<Boolean>(false,null,"验证码不能为空！");
+		}
+		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
+		String vdcodeOld = jedisCluster.get(srand);
+		if (vdcodeOld == null) {
+			return new ResponseEntity<Boolean>(false, null, "验证码错误");
+		}
+		if (!StringUtils.equals(vCode.trim(), vdcodeOld.trim())) {
+			return new ResponseEntity<Boolean>(false, null, "验证码错误");
+		}
+		jedisCluster.del(srand);
+		UserInfo userInfo2 = new UserInfo();
+		userInfo2.setEmail(userInfo.getEmail());
+		List<UserInfo> userInfos = loginInterface.getUserInfo(userInfo2);
+		if(userInfos.size()>0) {
+			return new ResponseEntity<Boolean>(false, null, "邮箱已经被注册！");
+		}
+		String passwdMd5 = DataTokenUtils.md5TokenBuilder(userInfo.getUserPassWord(),MD5Utils.secret);
+		userInfo.setUserPassWord(passwdMd5);
+		String userId = UUIDGenerator.generate();
+		userInfo.setUserId(userId);
+		String userInfoStrTemp = JSONObject.toJSONString(userInfo);
+		userInfo.setCreateTime(new Date());
+		loginInterface.userRegister(userInfo);
+		jedisCluster.set(userInfo.getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
+		jedisCluster.set(userInfo.getUserId()+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
+		return new ResponseEntity<Boolean>(true,null,null);
+	}
 }

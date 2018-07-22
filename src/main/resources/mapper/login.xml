@@ -25,7 +25,12 @@
 	      <if test="email != null">
 	        AND user_email = #{email}
 	      </if>
-	      </trim>
+	    </trim>
 	   </where>
 	</select>
+	<insert id = "userRegister" parameterType="com.mochat.model.UserInfo">
+	  insert into user_info (user_id,user_name,user_pass_word,user_phone,user_nick_name,user_email,user_sex,user_status,create_time)
+	  values
+	  (#{userId},#{userName},#{userPassWord},#{userPhone},#{nickname},#{email},#{sex},#{userStatus},#{createTime})
+	</insert>
 </mapper>

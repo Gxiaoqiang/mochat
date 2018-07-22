@@ -56,7 +56,7 @@
         
         <!-- 配置监控统计拦截的filters 去掉后监控界面sql无法统计
             开启web监控、开启sql防火墙 -->
-        <property name="filters" value="stat,wall"></property>
+        <property name="filters" value="stat"></property>
     </bean>
 
     <!-- 开启事务注解驱动 --> 

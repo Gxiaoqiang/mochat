@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:jdbc="http://www.springframework.org/schema/jdbc" xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:tx="http://www.springframework.org/schema/tx" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:task="http://www.springframework.org/schema/task"
+	xmlns:cache="http://www.springframework.org/schema/cache"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd
+				http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop.xsd
+		http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc.xsd">
+
+<aop:aspectj-autoproxy proxy-target-class="true"/> 
+	<!-- 使用Annotation自动注册Bean,只扫描@Controller -->
+	<context:component-scan base-package="com.mochat.*"
+		use-default-filters="false"><!-- base-package 如果多个，用“,”分隔 -->
+		<context:include-filter type="annotation" expression="org.springframework.stereotype.Controller" />
+		<context:exclude-filter type="annotation" expression="org.springframework.stereotype.Service"/> 
+	</context:component-scan>
+
+
+	<mvc:annotation-driven>
+		<mvc:message-converters register-defaults="true">
+			<bean
+				class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter">
+				<property name="supportedMediaTypes">
+					<list>
+						<value>text/html;charset=utf-8</value>
+						<value>application/json;charset=utf-8</value>
+						<value>application/x-www-form-urlencoded;charset=utf-8</value>
+						<value>application/octet-stream;charset=utf-8</value>
+					</list>
+				</property>
+				<property name="objectMapper">
+					<bean class="com.fasterxml.jackson.databind.ObjectMapper">
+						<property name="dateFormat">
+							<bean class="java.text.SimpleDateFormat">
+								<constructor-arg type="java.lang.String" value="yyyy-MM-dd HH:mm:ss" />
+							</bean>
+						</property>
+					</bean>
+				</property>
+			</bean>
+		</mvc:message-converters>
+	</mvc:annotation-driven>
+	<bean
+		class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
+		<!--线程安全的访问session -->
+		<property name="synchronizeOnSession" value="true" />
+	</bean>
+	<!-- <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+		<property name="defaultEncoding"> <value>UTF-8</value> </property> <property 
+		name="maxUploadSize"> <value>32505856</value>上传文件大小限制为31M，31*1024*1024 </property> 
+		<property name="maxInMemorySize"> <value>4096</value> </property> </bean> -->
+	<!-- 对模型视图添加前后缀 -->
+	<bean
+		class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<property name="prefix" value="/WEB-INF/html/" />
+		<property name="suffix" value=".html" />
+	</bean>
+
+	<!-- 对静态资源文件的访问， 将无法mapping到Controller的path交给default servlet handler处理 -->
+	<mvc:default-servlet-handler />
+
+	<!-- 静态资源映射 -->
+	<mvc:resources mapping="/js/**" location="/js/"
+		cache-period="3000">
+		<mvc:resource-chain resource-cache="true">
+			<mvc:resolvers>
+				<bean
+					class="org.springframework.web.servlet.resource.GzipResourceResolver" />
+			</mvc:resolvers>
+		</mvc:resource-chain>
+	</mvc:resources>
+	<!-- <mvc:interceptors>
+		<mvc:interceptor>
+			<mvc:mapping path="/api*" />
+			<mvc:mapping path="/api/*" />
+			<mvc:mapping path="/api/**/*" />
+			<bean class="com.cmb.bip.mvc.interceptor.SessionInterceptor" />
+		</mvc:interceptor>
+		<mvc:interceptor> <mvc:mapping path="/api/selector/attr/*/*/values"/> 
+			<bean class="com.cmb.bip.mvc.interceptor.OrgInterceptor"></bean> </mvc:interceptor>
+	</mvc:interceptors> -->
+</beans>

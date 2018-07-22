@@ -43,11 +43,12 @@ public class LoginController extends CommonHandler {
 	 * @return
 	 * @throws Exception
 	 */
-	@ResponseBody
+	
 	@RequestMapping("/register")
-	public ResponseEntity<Boolean> register(@RequestBody Map<String, String> paramMap) throws Exception {
+	@ResponseBody
+	public ResponseEntity<Boolean> register(@RequestBody UserInfo userInfo,HttpServletRequest request) throws Exception {
 
-		return null;
+		return loginService.register(userInfo, request);
 	}
 
 	@ResponseBody
