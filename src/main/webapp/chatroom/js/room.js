@@ -130,13 +130,13 @@
 				 param = "";
 			 }
 			 initWebSocketParam = param;
-		   if ('WebSocket' in window) {
-		        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
-		    }else if ('MozWebSocket' in window) {
-		        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"websocketNetty/socketServer.do?"+param);
-		    } else {
-		        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
-		    }
+			 if ('WebSocket' in window) {
+			        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
+			    }else if ('MozWebSocket' in window) {
+			        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
+			    } else {
+			        websocket = new SockJS(baseUrl()+"/mochat/sockjs/socketServer.do?"+param);
+			    }
 		   // 接收服务器的消息
 		    websocket.onmessage=function(ev){
 		    	var data = ev.data;
@@ -162,9 +162,9 @@
 		    	}
 		    };
 		    websocket.onclose = function (event) {
-		    	if(websocket == null||websocket.readyState>1){
+		    	/*if(websocket == null||websocket.readyState>1){
 		    		initWebSocket("room");
-		    	}
+		    	}*/
 		   };
 		   websocket.onopen = function () {
 			   heartCheck.start();
@@ -252,6 +252,9 @@
 			return userInfo;
 		},
 		bindEvent:function(){
+			window.addEventListener("beforeunload", function (e) {
+				  websocket.close();
+				});
 			$("#send_chat_btn").click(function(e){
 				var cmd = $(this).attr("cmd");
 				if(cmd == 0){

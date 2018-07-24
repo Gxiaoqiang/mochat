@@ -196,21 +196,12 @@
 		 initWebSocket = function(param){
 				//var  param = "chatType="+type;
 				 initWebSocketParam = param;
-			   /*if ('WebSocket' in window) {
-			        //websocket = new WebSocket("ws://"+baseUrl(1)+"websocket/socketServer.do?"+param);
-			       websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+":7397/mochat/"+"websocketNetty/socketServer.do?"+param);
-			    }else if ('MozWebSocket' in window) {
-			        websocket = new MozWebSocket("ws://"+baseUrl(1)+"websocketNetty/socketServer.do?"+param);
-			    } 
-			    else {
-			        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
-			    }*/
 				 if ('WebSocket' in window) {
-				        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
+				        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
 				    }else if ('MozWebSocket' in window) {
-				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"websocketNetty/socketServer.do?"+param);
+				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 				    } else {
-				        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
+				        websocket = new SockJS(baseUrl()+"/mochat/sockjs/socketServer.do?"+param);
 				    }
 			   //接收服务器的消息
 			    websocket.onmessage=function(ev){
@@ -245,9 +236,9 @@
 		            Stranger_Message(othermessage.replace("@message", messageaction(obj.msg)).replace("@time", new Date().getTime()), 1)
 			    };
 			    websocket.onclose = function (event) {
-			    	if(websocket == null||websocket.readyState>1){
+			    	/*if(websocket == null||websocket.readyState>1){
 			    		initWebSocket(initWebSocketParam);
-			    	}
+			    	}*/
 			   };
 			   websocket.onopen = function () {
 				   heartCheck.start();
@@ -352,6 +343,9 @@
     				 $("#connectButton").trigger("click");
     				 $(".slogan").show();
     			});
+    			window.addEventListener("beforeunload", function (e) {
+    				  websocket.close();
+    				});
     		}
  };
 })(jQuery,undefined,window)
