@@ -68,10 +68,12 @@ public class RoomChatService {
 		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
 		UserInfo userInfo = ThreadLocalCache.get();
 		String userId = userInfo.getUserId();
+		
 		String roomId = jedisCluster.get(userId+Constants.ROOM_CHAT);
 		jedisCluster.del(userId+Constants.ROOM_CHAT);
 		if(roomId != null) {
 			jedisCluster.srem(roomId+Constants.ROOM_CHAT, userId);
+			System.out.println("用户退出聊天室+*****************");
 		}
 		return true;
 	}

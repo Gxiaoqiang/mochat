@@ -131,11 +131,10 @@
 			 }
 			 initWebSocketParam = param;
 		   if ('WebSocket' in window) {
-		        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+":7397/mochat/"+"websocketNetty/socketServer.do?"+param);
+		        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
 		    }else if ('MozWebSocket' in window) {
 		        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"websocketNetty/socketServer.do?"+param);
-		    } 
-		    else {
+		    } else {
 		        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
 		    }
 		   // 接收服务器的消息
@@ -247,7 +246,7 @@
 		getUserInfo:function(){
 			var userInfoStr = sessionStorage.getItem("userInfo_"+random);
 			if(userInfoStr == null){
-				window.location.href = "../../login.html";
+				window.location.href = mochat.utils.baseURL()+"/login.html";
 			}
 			var userInfo = JSON.parse(userInfoStr);	
 			return userInfo;
@@ -272,17 +271,17 @@
 				layer.confirm('是否要关闭当前网页？', {
 				  btn: ['确定','取消'] //按钮
 				}, function(){
-					var url = "../roomChat/quitRoom";
+					var url = mochat.utils.baseURL()+"/roomChat/quitRoom";
 					 if(websocket == null||websocket == undefined){
 						 $.ajax({
 							 url:url,
-							 success:function(){
+							 success:function(result){
 								 
 							 }
 						 });
 					 }
 					 window.opener=null;
-					 window.location.href="../menu.html?random="+random;
+					 window.location.href=mochat.utils.baseURL()+"/menu.html?random="+random;
 					 window.close();
 				}, function(){
 				  

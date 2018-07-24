@@ -138,27 +138,14 @@
 														if (userInfo != null) {
 															var randomId = mochat.utils
 																	.randomStr(33);
-															$("#user_form")
-																	.attr(
-																			"action",
-																			"menu.html");
+															$("#user_form").attr("action","menu.html");
+															$("#random").val(randomId);
 
-															$("#random").val(
-																	randomId);
+															document.getElementById("user_form").submit();
 
-															document
-																	.getElementById(
-																			"user_form")
-																	.submit();
+															var userInfoStr = JSON.stringify(userInfo);
 
-															var userInfoStr = JSON
-																	.stringify(userInfo);
-
-															sessionStorage
-																	.setItem(
-																			"userInfo_"
-																					+ randomId,
-																			userInfoStr);
+															sessionStorage.setItem("userInfo_"+ randomId,userInfoStr);
 
 														} else {
 

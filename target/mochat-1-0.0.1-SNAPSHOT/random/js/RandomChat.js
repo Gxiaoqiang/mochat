@@ -66,7 +66,7 @@
     var baseUrl = function(flag) {
 		var x = window.location.href.split("/");
 		if(flag != null||flag != undefined){
-			return  x[2] + "/" + x[3] + "/";
+			return  x[2] ;
 		}
 		return x[0] + "//" + x[2] + "/" + x[3] + "/";
 	};
@@ -193,10 +193,10 @@
 		        /*sys += '<div class="conversation_divider">- - - - - - - - - - - - - - - - - - - - - - - - - - -</div>';*/
 		        $("#messages").html(sys);
 		 };
-		 initWebSocket = function(type){
-				var  param = "chatType="+type;
+		 initWebSocket = function(param){
+				//var  param = "chatType="+type;
 				 initWebSocketParam = param;
-			   if ('WebSocket' in window) {
+			   /*if ('WebSocket' in window) {
 			        //websocket = new WebSocket("ws://"+baseUrl(1)+"websocket/socketServer.do?"+param);
 			       websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+":7397/mochat/"+"websocketNetty/socketServer.do?"+param);
 			    }else if ('MozWebSocket' in window) {
@@ -204,7 +204,14 @@
 			    } 
 			    else {
 			        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
-			    }
+			    }*/
+				 if ('WebSocket' in window) {
+				        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
+				    }else if ('MozWebSocket' in window) {
+				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"websocketNetty/socketServer.do?"+param);
+				    } else {
+				        websocket = new SockJS(baseUrl()+"sockjs/socketServer.do?"+param);
+				    }
 			   //接收服务器的消息
 			    websocket.onmessage=function(ev){
 			    	var data = ev.data;
@@ -238,9 +245,8 @@
 		            Stranger_Message(othermessage.replace("@message", messageaction(obj.msg)).replace("@time", new Date().getTime()), 1)
 			    };
 			    websocket.onclose = function (event) {
-			    	//disConnection();
 			    	if(websocket == null||websocket.readyState>1){
-			    		initWebSocket("random");
+			    		initWebSocket(initWebSocketParam);
 			    	}
 			   };
 			   websocket.onopen = function () {
@@ -276,7 +282,7 @@
                     }
                     var param = "chatType=random";
                     if(websocket==null||websocket.readyState!=1){
-                    	initWebSocket("random");
+                    	initWebSocket(param);
                     }
 				   if(data.data.toUserId==null){
 						//alert("没有连接，请过会再次尝试");

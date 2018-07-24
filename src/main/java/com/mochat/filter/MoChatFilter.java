@@ -176,7 +176,7 @@ public class MoChatFilter implements Filter{
 			redirectUrl = errUri.substring(1);*/
 		
 		httpResponse.getWriter().println(
-				(new StringBuilder()).append("<script>window.location ='"+httpRequest.getContextPath()+"/")
+				(new StringBuilder()).append("<script>var x = window.location.href.split(\"/\"); window.location.href =x[0] + \"//\" + x[2] + \"/\" + x[3] + \"/\"+'")
 						.append(redirectUrl).append("';</script>").toString());
 		httpResponse.getWriter().flush();
 	}
