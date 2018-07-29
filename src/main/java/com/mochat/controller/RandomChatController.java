@@ -44,7 +44,7 @@ public class RandomChatController extends CommonHandler{
 	@ResponseBody
 	@RequestMapping("/disconnect")
 	public ResponseEntity<RandomMessageBody> disConnection(HttpServletRequest request)throws Exception{
-		RandomMessageBody msBody = connectionService.disConnection(request);
+		RandomMessageBody msBody = connectionService.disConnection();
 		return successHandle(true, msBody, null);
 	}
 	

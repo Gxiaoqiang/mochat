@@ -11,10 +11,10 @@ import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 
-@Configuration
+/*@Configuration
 @EnableWebMvc
-@EnableWebSocket
-public class MoWebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
+@EnableWebSocket*/
+/*public class MoWebSocketConfig extends WebMvcConfigurerAdapter implements WebSocketConfigurer {
    
 	@Autowired
 	private MoHandshakeInterceptor moHandshakeInterceptor;
@@ -29,4 +29,4 @@ public class MoWebSocketConfig extends WebMvcConfigurerAdapter implements WebSoc
         return new MoChatWebSocketHandler();
     }
 
-}
+}*/

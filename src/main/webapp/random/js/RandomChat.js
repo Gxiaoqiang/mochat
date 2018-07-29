@@ -165,7 +165,7 @@
 				        		 if(websocket.readyState == 1){
 				                       websocket.send("HeartBeat");
 			                          }
-				        		}, 15000);
+				        		}, 10000);
 				        	}
 				        }, this.timeout)
 				    }
@@ -197,11 +197,13 @@
 				//var  param = "chatType="+type;
 				 initWebSocketParam = param;
 				 if ('WebSocket' in window) {
-				        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
+				        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
+
+				        //websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
 				    }else if ('MozWebSocket' in window) {
 				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 				    } else {
-				        websocket = new SockJS(baseUrl()+"/mochat/sockjs/socketServer.do?"+param);
+				        websocket = new SockJS(baseUrl()+"/websocketNetty/sockjs/socketServer.do?"+param);
 				    }
 			   //接收服务器的消息
 			    websocket.onmessage=function(ev){
@@ -226,6 +228,7 @@
 			    		return;
 			    	}
 			    	if(obj.disConnectFlag == true){
+			    		alert(obj.msg);
 			    		 var sys = '<div class="system  "><div class="conversation_divider" >- - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </div >对方已经和你断开连接！</div>';
 	                     $("#messages").append(sys);
 	                     $("#connectButton").val("连接");
@@ -272,9 +275,10 @@
                     	return;
                     }
                     var param = "chatType=random";
-                    if(websocket==null||websocket.readyState!=1){
+                    /*if(websocket==null||websocket.readyState!=1){
                     	initWebSocket(param);
-                    }
+                    }*/
+                    initWebSocket(param);
 				   if(data.data.toUserId==null){
 						//alert("没有连接，请过会再次尝试");
 					    connectFail(0);
@@ -302,6 +306,11 @@
     			$.fn.chat.bind();
     			$("#connectButton").trigger("click");
 				$(".slogan").show();
+    		},
+    		close:function(){
+    			if(websocket != null){
+    				websocket.close(1000,"otherLogin");
+    			}
     		},
     		bind:function(){
     		  $("#connectButton").click(function() {
@@ -345,7 +354,10 @@
     			});
     			window.addEventListener("beforeunload", function (e) {
     				  websocket.close();
-    				});
+    			});
+    			window.onunload = function(){
+    				websocket.close();
+    			}
     		}
  };
 })(jQuery,undefined,window)

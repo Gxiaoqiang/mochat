@@ -43,10 +43,17 @@ public class UserInfo extends CommonPojo implements Serializable{
     
     private String userStatus;
     
+    private String flag;//判断单点登录，标识，为单一随机数
     
-    
-    
-    public String getUserStatus() {
+    public String getFlag() {
+		return flag;
+	}
+
+	public void setFlag(String flag) {
+		this.flag = flag;
+	}
+
+	public String getUserStatus() {
 		return userStatus;
 	}
 

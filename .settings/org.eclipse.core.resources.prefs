@@ -8,3 +8,4 @@ encoding//src/main/resources=UTF-8
 encoding//src/main/webapp/header.html=UTF-8
 encoding//src/test/java=UTF-8
 encoding//src/test/resources=UTF-8
+encoding/<project>=GBK

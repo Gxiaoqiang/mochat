@@ -24,16 +24,14 @@ public class DataTokenUtils {
 	
 	private static final String DATA_EXPRESS = "=";
 	
-	private static final String NULL = "null";
 	private static final String USER_ID = "userId";
 	private static final String USER_NAME = "userName";
 	private static final String TIME = "time";
 	private static final String LOGIN_TIME = "loginTime";
-	private static final String IP = "ip";
-	private static final String SAP_ID = "sapId";
-	private static final String ORG_ID = "orgId";
-	private static final String EMAIL = "eamil";
-	private static final String NET = "net";
+	
+	private static final String LOGIN_FLAG = "flag";
+	
+	
 	
 	public static String md5TokenBuilder(String data,String salt){
 		if(data == null)
@@ -73,7 +71,8 @@ public class DataTokenUtils {
 			.append(USER_ID).append(DATA_EXPRESS).append(user.getUserId()).append(DATA_SPLIT)
 			.append(TIME).append(DATA_EXPRESS).append(df.format(nowDate)).append(DATA_SPLIT)
 			.append(LOGIN_TIME).append(DATA_EXPRESS).append(df.format(nowDate)).append(DATA_SPLIT)
-			.append(USER_NAME).append(DATA_EXPRESS).append(user.getUserName()).append(DATA_SPLIT);
+			.append(USER_NAME).append(DATA_EXPRESS).append(user.getUserName()).append(DATA_SPLIT)
+			.append(LOGIN_FLAG).append(DATA_EXPRESS).append(user.getFlag()).append(DATA_SPLIT);
 		return sb.toString();
 	}
 }

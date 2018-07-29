@@ -126,7 +126,6 @@
 												"srand")
 
 									};
-
 									$.ajax({
 												data : data,
 												url : "login/loginIn",

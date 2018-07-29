@@ -20,7 +20,7 @@ public interface ConnectionInterface {
 	 * @param request
 	 * @return
 	 */
-	RandomMessageBody disConnection(HttpServletRequest request)throws Exception;
+	RandomMessageBody disConnection()throws Exception;
 	
 	
 }

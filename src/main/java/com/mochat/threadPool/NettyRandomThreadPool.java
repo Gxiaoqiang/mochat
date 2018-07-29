@@ -42,7 +42,9 @@ public class NettyRandomThreadPool {
 		
 		@Override
 		public void run() {
-			
+			if(message == null) {
+				return;
+			}
 			JSONObject jsonObject = JSONObject.parseObject(message);
 			if(!jsonObject.containsKey("userId")||!jsonObject.containsKey("toUserId")) {
 				return;
@@ -67,9 +69,6 @@ public class NettyRandomThreadPool {
 	     	    jedisCluster.hdel(RedisConstants.CHAT_ING_HASH, userId);
 	   		    jedisCluster.hdel(RedisConstants.CHAT_ING_HASH, toUserId);
 	           }
-	        	/*if(channelHandlerContext.channel().isOpen()) {
-	        		BaseWebSocketServerHandler.push(channelHandlerContext, message);
-	        	}*/
 	        	BaseWebSocketServerHandler.pushRandom(channelHandlerContext, message);
 	        }catch(Exception e) {
 	        	e.printStackTrace();

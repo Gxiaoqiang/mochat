@@ -21,6 +21,8 @@ import com.mochat.model.UserInfo;
 import com.mochat.redis.CustomRedisClusters;
 import com.mochat.service.impl.LoginService;
 import com.mochat.service.impl.VerificationCodeService;
+import com.sun.org.apache.xpath.internal.operations.Bool;
+import com.sun.xml.internal.fastinfoset.algorithm.BooleanEncodingAlgorithm;
 
 import redis.clients.jedis.JedisCluster;
 
@@ -95,6 +97,9 @@ public class LoginController extends CommonHandler {
 		userInfo.setUserPassWord(passWord);
 		userInfo = loginService.getUserInfo(userInfo, request, response);
 
+		if(userInfo == null) {
+			return successHandle(true, userInfo, "用户不存在或者密码错误！");
+		}
 		return successHandle(true, userInfo, null);
 	}
 
@@ -110,5 +115,12 @@ public class LoginController extends CommonHandler {
 	public ResponseEntity<Map<String, Object>> getVerificationImage() throws ServletException, IOException {
 		Map<String, Object> map = verificationCodeService.encodeBase64ImgCode();
 		return successHandle(true, map, null);
+	}
+	
+	@RequestMapping(value= {"/checkLogin"})
+	@ResponseBody
+	public ResponseEntity<Boolean> checkLogin(){
+		Boolean flag = loginService.checkLogin();
+		return successHandle(true, flag, null);
 	}
 }

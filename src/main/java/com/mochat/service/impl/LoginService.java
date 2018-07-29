@@ -43,6 +43,12 @@ public class LoginService {
 	@Autowired
 	private CustomRedisClusters customRedisCluster;
 	
+	@Autowired
+	private RoomChatService roomChatService;
+	
+	@Autowired
+	private RandomChatService randomChatService;
+	
 	/**
 	 * 
 	 * @param request
@@ -55,9 +61,6 @@ public class LoginService {
 		
 		DataTokenUtils.setValueToCookie(response, request, "data",null , -1);
 		DataTokenUtils.setValueToCookie(response, request, "token", null, -1);
-		
-		DataTokenUtils.setValueToCookie(response, request, COOKIE_DATA,null , -1);
-		DataTokenUtils.setValueToCookie(response, request, COOKIE_TOKEN, null, -1);
 		
 		return true;
 	}
@@ -72,13 +75,18 @@ public class LoginService {
 		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
 		String passwdMd5 = DataTokenUtils.md5TokenBuilder(userInfo.getUserPassWord(),MD5Utils.secret);
 		String userInfoStr = jedisCluster.get(userInfo.getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX);
+		String loginFlag = UUIDGenerator.generate();
 		if(userInfoStr != null) {
 			JSONObject jsonObject = JSONObject.parseObject(userInfoStr);
 			userInfo = JSONObject.toJavaObject(jsonObject, UserInfo.class);
 			userInfo.setUserPassWord(null);
 			userInfo.setLoginTime(String.valueOf(System.currentTimeMillis()));
-			setValueToCookie(response, request, userInfo,  0);
 			
+			setLoginFlag( jedisCluster, userInfo , loginFlag);
+			setValueToCookie(response, request, userInfo,  0);
+			ThreadLocalCache.set(userInfo);
+			roomChatService.quitRoom();
+			randomChatService.quitRandom();
 			return userInfo;
 		}
 		
@@ -89,7 +97,12 @@ public class LoginService {
 		if(userInfo2 == null||userInfo2.size() == 0) {
 			return null;
 		}
+		
+		setLoginFlag( jedisCluster, userInfo , loginFlag);
 		setValueToCookie(response, request, userInfo2.get(0),  0);
+		ThreadLocalCache.set(userInfo);
+		roomChatService.quitRoom();
+		randomChatService.quitRandom();
 		//userInfo2.get(0).setLoginTime(String.valueOf(System.currentTimeMillis()));
 		String userInfoStrTemp = JSONObject.toJSONString(userInfo2.get(0));
 		jedisCluster.set(userInfo2.get(0).getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
@@ -98,19 +111,22 @@ public class LoginService {
 		return userInfo2.get(0);
 	}
 	
+	
+	private void setLoginFlag(JedisCluster jedisCluster,UserInfo userInfo ,String loginFlag) {
+		userInfo.setFlag(loginFlag);
+		jedisCluster.set(userInfo.getUserId()+RedisConstants.LOGIN_FLAG, loginFlag);
+		jedisCluster.pexpire(userInfo.getUserId()+RedisConstants.LOGIN_FLAG, RedisConstants.EXPIRE_TIME*1000);
+	}
+	
 	private void setValueToCookie(HttpServletResponse httpResponse,
 			HttpServletRequest httpRequest,UserInfo userInfo,  int expiry) throws Exception{
 		String data = DataTokenUtils.buildCookieData(userInfo);
 		data = new String(SercurityToolUtils.encodeBase64(data), "UTF-8");
 		String token = DataTokenUtils.md5TokenBuilder(data, MD5Utils.secret);
 		
-		//
 		DataTokenUtils.setValueToCookie(httpResponse, httpRequest, DATA,data , -1);
 		DataTokenUtils.setValueToCookie(httpResponse, httpRequest, TOKEN, token, -1);
 		DataTokenUtils.setValueToCookie(httpResponse, httpRequest, "userId", token, -1);
-/*		DataTokenUtils.setValueToCookie(httpResponse, httpRequest, COOKIE_DATA,data , -1);
-		DataTokenUtils.setValueToCookie(httpResponse, httpRequest, COOKIE_TOKEN, token, -1);*/
-		
 		HttpSession session = httpRequest.getSession(true);
 		session.setAttribute(RedisConstants.USER_INFO_SUFFIX, userInfo);
 	}
@@ -157,5 +173,20 @@ public class LoginService {
 		jedisCluster.set(userInfo.getEmail()+passwdMd5+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
 		jedisCluster.set(userInfo.getUserId()+RedisConstants.USER_INFO_SUFFIX, userInfoStrTemp);
 		return new ResponseEntity<Boolean>(true,null,null);
+	}
+	
+	public Boolean checkLogin() {
+		UserInfo userInfo = ThreadLocalCache.get();
+		
+		String loginFlag = userInfo.getFlag();
+		
+		String userId = userInfo.getUserId();
+		
+		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
+		String oldLoginFlag = jedisCluster.get(userId+RedisConstants.LOGIN_FLAG);
+		if(StringUtils.equals(loginFlag, oldLoginFlag)) {
+			return true;
+		}
+		return false;
 	}
 }

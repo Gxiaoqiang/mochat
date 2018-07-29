@@ -1,6 +1,5 @@
 package com.mochat.service.impl;
 
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,7 +11,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.socket.WebSocketSession;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mochat.cache.ThreadLocalCache;
@@ -21,15 +19,16 @@ import com.mochat.constant.RedisConstants;
 import com.mochat.exception.MoChatException;
 import com.mochat.model.RandomMessageBody;
 import com.mochat.model.UserInfo;
+import com.mochat.netty.constant.NettyContextManage;
 import com.mochat.rabbitmq.RabbitRandomPublish;
 import com.mochat.redis.CustomRedisClusters;
 import com.mochat.redis.RedisLock;
 import com.mochat.service.ConnectionInterface;
 import com.mochat.threadPool.RandomThreadPool;
-import com.mochat.websocket.MoChatSessionManager;
 import com.util.IpUtils;
 import com.util.UUIDGenerator;
 
+import io.netty.channel.ChannelHandlerContext;
 import redis.clients.jedis.JedisCluster;
 
 @Service
@@ -77,8 +76,9 @@ public class RandomChatService  implements ConnectionInterface{
 					if(toUserId != null) {
 						currentUserInfo.setUserId(userId);
 						currentUserInfo.setToUserId(toUserId);
-						WebSocketSession webSocketSession = MoChatSessionManager.SESSION_MAP.get(userId);
-						if(webSocketSession != null) {
+						//WebSocketSession webSocketSession = MoChatSessionManager.SESSION_MAP.get(userId);
+						ChannelHandlerContext ctx = NettyContextManage.ID_CTX_MAP.get(userId);
+						if(ctx != null) {
 							currentUserInfo.setFirstConnect(false);
 						}
 						jedisCluster.srem(RedisConstants.WAIT_SET, toUserId);
@@ -94,6 +94,7 @@ public class RandomChatService  implements ConnectionInterface{
 						if (waitLength == 1) {
 							toUserId = jedisCluster.srandmember(RedisConstants.WAIT_SET);
 							if(StringUtils.equals(toUserId, userId)) {
+								jedisCluster.sadd(RedisConstants.WAIT_SET, userId);
 								toUserId = null;
 							}
 						}
@@ -134,10 +135,18 @@ public class RandomChatService  implements ConnectionInterface{
 				session.setAttribute(Constants.USER_SESSION, currentUserInfo);
 				RedisLock.releaseDistributedLock(jedisCluster, RedisConstants.CONNECT_KEY, requestId);
 			}
-			
 			return currentUserInfo;
 	}
 
+	public void quitRandom() {
+		UserInfo info = ThreadLocalCache.get();
+		ChannelHandlerContext channelHandlerContext = NettyContextManage.ID_CTX_MAP.get(info.getUserId());
+		if(channelHandlerContext != null) {
+			NettyContextManage.CTX_ID_MAP.remove(channelHandlerContext);
+			NettyContextManage.ID_CTX_MAP.remove(info.getUserId());
+		}
+		disConnection();
+	}
 	public RandomMessageBody sendMsg(HttpServletRequest request) throws MoChatException, Exception{
 
         UserInfo userInfo = ThreadLocalCache.get();
@@ -152,27 +161,17 @@ public class RandomChatService  implements ConnectionInterface{
 		return msBody;
 	}
 	@Override
-	public RandomMessageBody disConnection(HttpServletRequest request) throws Exception{
+	public RandomMessageBody disConnection() {
 		// TODO Auto-generated method stub
 		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
-		String userId = request.getParameter("userId");
-		HttpSession session = request.getSession(true);
-		Object object = session.getAttribute(Constants.USER_SESSION);
-		UserInfo currentUserInfo = null;
-		
-		if(object == null) {
-			if(object instanceof UserInfo) {
-				currentUserInfo = (UserInfo)object;
-				userId = currentUserInfo.getUserId();
-			}
-		}
+		UserInfo userInfo = ThreadLocalCache.get();
+		String userId = userInfo.getUserId();
 		
 		String toUserId = jedisCluster.hget(RedisConstants.CHAT_ING_HASH, userId);
 		return disconnect(jedisCluster, userId, toUserId);
-		
 	}
 	
-	private final RandomMessageBody disconnect(JedisCluster jedisCluster,String userId,String toUserId)throws Exception {
+	private final RandomMessageBody disconnect(JedisCluster jedisCluster,String userId,String toUserId){
 		RandomMessageBody msBody = new RandomMessageBody();
 		msBody.setUserId(userId);
 		msBody.setToUserId(toUserId);
@@ -184,6 +183,7 @@ public class RandomChatService  implements ConnectionInterface{
 			jedisCluster.hdel(RedisConstants.CHAT_ING_HASH, toUserId);
 		}
 		if(userId != null &&toUserId != null) {
+			LOGGER.info("--------DISCONNECT--------");
 			rabbitRandomPublish.send("R",JSONObject.toJSON(msBody).toString());
 		}
 		

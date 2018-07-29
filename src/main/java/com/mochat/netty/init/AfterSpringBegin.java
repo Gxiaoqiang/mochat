@@ -16,7 +16,7 @@ public abstract class AfterSpringBegin extends TimerTask  implements Application
         if(event.getApplicationContext().getParent() ==null){
             
             Timer timer = new Timer();
-           timer.schedule(this, 0);
+            timer.schedule(this, 0);
         }
     }
 

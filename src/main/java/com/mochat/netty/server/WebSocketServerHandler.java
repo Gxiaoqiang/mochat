@@ -18,6 +18,7 @@ import org.springframework.stereotype.Component;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mochat.cache.ThreadLocalCache;
+import com.mochat.cache.ThreadLocalCacheLogin;
 import com.mochat.cache.ThreadLocalDataTokenMap;
 import com.mochat.constant.Constants;
 import com.mochat.constant.RedisConstants;
@@ -75,9 +76,11 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 	private void addChannelHander(ChannelHandlerContext ctx,UserInfo userInfo) throws Exception{
 		String chatType = userInfo.getChatType();
 		if(StringUtils.equalsIgnoreCase(Constants.ROOM_CHAT, chatType)) {
+			LOGGER.info("----room加入------");
 			addRoomChannel(ctx,userInfo);
 		}
 		if(StringUtils.equalsIgnoreCase(Constants.RANDOM_CHAT, chatType)) {
+			LOGGER.info("-----自定义加入------");
 			addRandomChannel(ctx, userInfo);
 		}
 	}
@@ -99,7 +102,7 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 	 */
 	@Override
 	public void channelInactive(ChannelHandlerContext ctx) throws Exception {
-		System.out.println("-----------"+Thread.currentThread().getName());
+		LOGGER.info("-----------"+Thread.currentThread().getName()+ctx.channel().isActive());
 		closeChannelContext(ctx);
 	}
 
@@ -112,6 +115,12 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 	public void handlerWebSocketFrame(ChannelHandlerContext ctx, WebSocketFrame frame) throws Exception {
 		// 关闭请求
 		if (frame instanceof CloseWebSocketFrame) {
+			LOGGER.info("*******发送关闭命令*******");
+			CloseWebSocketFrame frame2 = (CloseWebSocketFrame)frame;
+			String reason = frame2.reasonText();
+			if(StringUtils.equals("otherLogin", reason)) {
+				ThreadLocalCacheLogin.set("otherLogin");
+			}
 			handshaker.close(ctx.channel(), (CloseWebSocketFrame) frame.retain());
 			return;
 		}
@@ -131,6 +140,7 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 		}
 		String request = ((TextWebSocketFrame) frame).text();
 		if(request.contains("HeartBeat")) {
+			System.out.println("HeartBeat");
 			return;
 		}
 		UserInfo userInfo = ThreadLocalCache.get();
@@ -193,7 +203,7 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 	public boolean validateDataAndToken(ChannelHandlerContext ctx,FullHttpRequest request)throws Exception{
 		String cookie = request.headers().get("Cookie");
 		if(StringUtils.isEmpty(cookie)) {
-			redirectHttp(ctx, request);
+			//redirectHttp(ctx, request);
 			return false;
 		}
 		cookie = cookie.replace("\"", "");
@@ -201,16 +211,16 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 		String data  = getValueFromCookie(cookies, "data=");
 		String token = getValueFromCookie(cookies, "token=");
 		if(StringUtils.isEmpty(data)||StringUtils.isEmpty(token)) {
-			redirectHttp(ctx, request);
+			//redirectHttp(ctx, request);
 			return false;
 		}
 		if(!MD5Utils.getVerifyInstance().verifyDataToken(data,token)){
-			redirectHttp(ctx, request);
+			//redirectHttp(ctx, request);
 			return false;
 		}
 		UserInfo cookieUser = getUserBySecurityFactory(data);
 		if (null == cookieUser) {
-			redirectHttp(ctx, request);
+			//redirectHttp(ctx, request);
 			return false;
 		} else {
 			Map<String, String> map = new HashMap<String, String>();

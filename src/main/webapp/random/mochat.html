@@ -68,7 +68,7 @@
     	var baseURL = mochat.utils.baseURL();
     	$.get(baseURL+"header.html",function(result){
 			$(".header").html(result);
-			$.fn.header.init();
+			$.fn.header.init($.fn.chat.close());
 			$.fn.chat.init();
 		});
     });

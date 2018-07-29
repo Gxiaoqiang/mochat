@@ -131,11 +131,13 @@
 			 }
 			 initWebSocketParam = param;
 			 if ('WebSocket' in window) {
-			        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/"+"websocketNetty/socketServer.do?"+param);
+			       websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
+
+			       // websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
 			    }else if ('MozWebSocket' in window) {
 			        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 			    } else {
-			        websocket = new SockJS(baseUrl()+"/mochat/sockjs/socketServer.do?"+param);
+			        websocket = new SockJS(baseUrl()+"/websocketNetty/sockjs/socketServer.do?"+param);
 			    }
 		   // 接收服务器的消息
 		    websocket.onmessage=function(ev){
@@ -243,6 +245,11 @@
 			});
 			$.fn.roomchat.bindEvent();
 		},
+		close:function(){
+			if(websocket != null){
+				websocket.close(1000,"otherLogin");
+			}
+		},
 		getUserInfo:function(){
 			var userInfoStr = sessionStorage.getItem("userInfo_"+random);
 			if(userInfoStr == null){
@@ -255,6 +262,9 @@
 			window.addEventListener("beforeunload", function (e) {
 				  websocket.close();
 				});
+			window.onunload = function(){
+				websocket.close();
+			}
 			$("#send_chat_btn").click(function(e){
 				var cmd = $(this).attr("cmd");
 				if(cmd == 0){
@@ -279,13 +289,16 @@
 						 $.ajax({
 							 url:url,
 							 success:function(result){
-								 
+								 window.opener=null;
+								 window.location.href=mochat.utils.baseURL()+"/menu.html?random="+random;
+								 window.close();
 							 }
 						 });
+					 }else{
+						 window.opener=null;
+						 window.close();
+						 window.location.href=mochat.utils.baseURL()+"/menu.html?random="+random;
 					 }
-					 window.opener=null;
-					 window.location.href=mochat.utils.baseURL()+"/menu.html?random="+random;
-					 window.close();
 				}, function(){
 				  
 				});

@@ -2,11 +2,10 @@ package com.mochat.netty.server;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.log4j.Logger;
-import org.springframework.web.socket.TextMessage;
-import org.springframework.web.socket.WebSocketSession;
 
 import com.alibaba.fastjson.JSONObject;
 import com.mochat.cache.ThreadLocalCache;
+import com.mochat.cache.ThreadLocalCacheLogin;
 import com.mochat.constant.Constants;
 import com.mochat.constant.RedisConstants;
 import com.mochat.listener.MyApplicationContextListener;
@@ -14,10 +13,8 @@ import com.mochat.model.RandomMessageBody;
 import com.mochat.model.RoomMessageBody;
 import com.mochat.model.UserInfo;
 import com.mochat.netty.constant.NettyContextManage;
-import com.mochat.netty.exception.NettyException;
 import com.mochat.rabbitmq.RabbitRandomPublish;
 import com.mochat.redis.CustomRedisClusters;
-import com.mochat.websocket.MoChatSessionManager;
 
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -70,6 +67,9 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 		CustomRedisClusters customRedisClusters = (CustomRedisClusters) MyApplicationContextListener.getBean("customRedisClusters");
  	    JedisCluster jedisCluster = customRedisClusters.getJedisCluster();
  	    String roomId = jedisCluster.get(userInfo.getUserId()+Constants.ROOM_CHAT);
+ 	    if(roomId == null) {
+ 	    	return;
+ 	    }
  	    ChannelGroup channelGroup = NettyContextManage.CHANNELGROUP_MAP.get(roomId);
  	    if(channelGroup == null) {
  	    	channelGroup = new DefaultChannelGroup(GlobalEventExecutor.INSTANCE);
@@ -89,8 +89,8 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 			if(userId != null) {
 				ctx2 = NettyContextManage.ID_CTX_MAP.get(userId);
 			}
-			if(ctx2 != null&&ctx2.channel().isActive()) {
-				throw new NettyException("no repeat login!");
+			if(ctx2 != null ) {
+				NettyContextManage.CTX_ID_MAP.remove(ctx2);
 			}
 			if(userId != null) {
 				NettyContextManage.ID_CTX_MAP.put(userId, ctx);
@@ -136,7 +136,7 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 	    	roomMessageBody.setRoomId(roomId);
 	    	roomMessageBody.setUserId(userInfo.getUserId());
 	    	roomMessageBody.setUserInfo(userInfoStr);
-	    	BaseWebSocketServerHandler.roomPush(roomMessageBody);
+	    	roomPush(roomMessageBody);
 	}
 	/**
 	 * 发送随机聊天
@@ -147,14 +147,18 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 	protected void randomChatPush(ChannelHandlerContext ctx,JedisCluster jedisCluster,UserInfo userInfo,String request) {
 		JSONObject jsonObject = JSONObject.parseObject(request);
 		RabbitRandomPublish rabbitRandomPublish = (RabbitRandomPublish) MyApplicationContextListener.getBean("rabbitRandomPublish");
-		String userId = jsonObject.getString("userId");
+		String userId = userInfo.getUserId();//jsonObject.getString("userId");
 		String redisToUserId = jedisCluster.hget(RedisConstants.CHAT_ING_HASH, userId);
+		jsonObject.put("disConnectFlag", false);
 		if(redisToUserId == null) {
+			LOGGER.info("+++++++++++++++断开测试+++++++++");
+			System.out.println("+++++++++++++++断开测试+++++++++");
 			jsonObject.put("disConnectFlag", true);
 			ctx.writeAndFlush(new TextWebSocketFrame(jsonObject.toJSONString()));
 			return;
 		}
 		jsonObject.put("toUserId", redisToUserId);
+		jsonObject.put("userId", userId);
 		ChannelHandlerContext toContext = NettyContextManage.ID_CTX_MAP.get(redisToUserId);
 		if(toContext != null) {
 			toContext.writeAndFlush(new TextWebSocketFrame(jsonObject.toJSONString()));
@@ -164,7 +168,7 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 	}
 	private void closeRoomContext(ChannelHandlerContext ctx,UserInfo userInfo)throws Exception{
 		CustomRedisClusters customRedisClusters = (CustomRedisClusters) MyApplicationContextListener.getBean("customRedisClusters");
- 	    JedisCluster jedisCluster = customRedisClusters.getJedisCluster();
+  	    JedisCluster jedisCluster = customRedisClusters.getJedisCluster();
  	    String roomId = jedisCluster.get(userInfo.getUserId()+Constants.ROOM_CHAT);
  	    if(roomId == null) {
  	    	return;
@@ -176,13 +180,17 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
  	    if(channelGroup.isEmpty()) {
  	    	NettyContextManage.CHANNELGROUP_MAP.remove(roomId);
  	    }
- 	    jedisCluster.del(userInfo.getUserId()+Constants.ROOM_CHAT);
- 	    jedisCluster.srem(roomId+Constants.ROOM_CHAT,userInfo.getUserId());
+ 	    if(!StringUtils.equals(ThreadLocalCacheLogin.get(),"otherLogin")) {
+ 		    jedisCluster.del(userInfo.getUserId()+Constants.ROOM_CHAT);
+ 	 	    jedisCluster.srem(roomId+Constants.ROOM_CHAT,userInfo.getUserId());
+ 	 	   ThreadLocalCacheLogin.remove();
+		 }
  	    ctx.close();
 	}
 	private void closeRandomContext(ChannelHandlerContext ctx,UserInfo userInfo)throws Exception{
 		String userId = null;
 		try {
+			ThreadLocalCacheLogin.remove();
 			if(userInfo != null) {
 				 userId = userInfo.getUserId();
 			}else {
@@ -211,6 +219,8 @@ public abstract class BaseWebSocketServerHandler extends SimpleChannelInboundHan
 				msBody.setUserId(userId);
 				msBody.setToUserId(toUserId);
 				msBody.setDisConnectFlag(true);
+				msBody.setMsg("-------------断开信息-------------");
+				LOGGER.info("-------------断开信息-------------");
 				rabbitRandomPublish.send("R",JSONObject.toJSON(msBody).toString());
 	 	    }
 	 	    ctx.close();

@@ -61,7 +61,9 @@ public class RedisConstants {
 	
 	public static final String VERIFICATION = "_verification";
 	
-	public static final int EXPIRE_TIME = 2*60*60;
+	public static final Integer EXPIRE_TIME = 2*60*60;
+	
+	public static final String LOGIN_FLAG = "_loginFlag";
 	/**
 	 * 聊天类型,
 	 * 1:随机,2:聊天室

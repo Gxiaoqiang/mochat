@@ -17,6 +17,7 @@
 <link href="../common/css/header.css" rel="stylesheet">
 <script src="../lib/jquery.1.11.0.min.js"></script>
 <script src="../lib/jquery-ui/jquery-ui-1.10.3.custom.min.js"></script>
+<script type="text/javascript" src="../common/reconnecting-websocket.js"></script>
 <script type="text/javascript" src="../common/chat.common.js"></script>
 <script src="../lib/layer/layer.js"></script>
 <script src="./js/iscroll.js"></script>
@@ -166,7 +167,7 @@
 			var baseURL = mochat.utils.baseURL();
 	    	$.get(baseURL+"header.html",function(result){
 				$(".header").html(result);
-				$.fn.header.init();
+				$.fn.header.init($.fn.roomchat.close);
 				$.fn.roomchat.init();
 			});
 		});

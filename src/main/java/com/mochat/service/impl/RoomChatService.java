@@ -3,7 +3,6 @@ package com.mochat.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.function.LongToDoubleFunction;
 
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -64,7 +63,7 @@ public class RoomChatService {
 		return jedisCluster.scard(roomId+Constants.ROOM_CHAT);
 	}
 	
-	public boolean quitRoom()throws Exception{
+	public boolean quitRoom(){
 		JedisCluster jedisCluster = customRedisCluster.getJedisCluster();
 		UserInfo userInfo = ThreadLocalCache.get();
 		String userId = userInfo.getUserId();

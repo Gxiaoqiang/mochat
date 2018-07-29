@@ -24,6 +24,7 @@ public class MochatDataParser implements DataParser {
 	private static final String USER_MAIL = "userMail";
 	private static final String LOGIN_TIME = "loginTime";
 	private static final String IP = "ip";
+	private static final String LOGIN_FLAG = "flag";
 	
 	@Override
 	public UserInfo parseDataEntity(String data) {
@@ -57,6 +58,8 @@ public class MochatDataParser implements DataParser {
 							result.setEmail(val);
 						} else if (USER_NICK_NAME.equals(key)) {
 							result.setNickname(val);
+						}else if(LOGIN_FLAG.equals(key)) {
+							result.setFlag(val);
 						}
 					}
 				}

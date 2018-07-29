@@ -80,7 +80,6 @@ public class RabbitRandomComsumer extends AbstractRabbitMQ{
 		      public void handleDelivery(String consumerTag, Envelope envelope,
 		                                 AMQP.BasicProperties properties, byte[] body) throws IOException {
 		        String message = new String(body, "UTF-8");
-		        LOGGER.info("rabbitmq-------"+message);
 		        //NettySendMsgThreadPool.send(message);
 		        NettyRandomThreadPool.send(message);
 		      }
@@ -95,7 +94,6 @@ public class RabbitRandomComsumer extends AbstractRabbitMQ{
 		      public void handleDelivery(String consumerTag, Envelope envelope,
 		                                 AMQP.BasicProperties properties, byte[] body) throws IOException {
 		        String message = new String(body, "UTF-8");
-		        LOGGER.info("rabbitmq-------"+message);
 		        //NettySendMsgThreadPool.send(message);
 		        RoomThreadPool.send(message);
 		      }
