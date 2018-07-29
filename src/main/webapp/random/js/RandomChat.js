@@ -197,9 +197,9 @@
 				//var  param = "chatType="+type;
 				 initWebSocketParam = param;
 				 if ('WebSocket' in window) {
-				        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
+				        //websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 
-				        //websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
+				        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
 				    }else if ('MozWebSocket' in window) {
 				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 				    } else {
@@ -228,7 +228,6 @@
 			    		return;
 			    	}
 			    	if(obj.disConnectFlag == true){
-			    		alert(obj.msg);
 			    		 var sys = '<div class="system  "><div class="conversation_divider" >- - - - - - - - - - - - - -  - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - </div >对方已经和你断开连接！</div>';
 	                     $("#messages").append(sys);
 	                     $("#connectButton").val("连接");

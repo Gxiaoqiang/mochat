@@ -140,7 +140,6 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 		}
 		String request = ((TextWebSocketFrame) frame).text();
 		if(request.contains("HeartBeat")) {
-			System.out.println("HeartBeat");
 			return;
 		}
 		UserInfo userInfo = ThreadLocalCache.get();
@@ -249,6 +248,10 @@ public class WebSocketServerHandler extends BaseWebSocketServerHandler {
 					break;
 				String cc = cookies[i$];
 				if (cc.trim().startsWith(key)) {
+				    String []cookiesTemp = cc.split("=");
+				    if(cookiesTemp.length == 1) {
+				    	return null;
+				    }
 					cookie = cc.split("=")[1];
 					break;
 				}
