@@ -197,9 +197,9 @@
 				//var  param = "chatType="+type;
 				 initWebSocketParam = param;
 				 if ('WebSocket' in window) {
-				        //websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
+				        websocket = new WebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 
-				        websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
+				        //websocket = new ReconnectingWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param,null,{ debug: true, reconnectInterval: 4000 });
 				    }else if ('MozWebSocket' in window) {
 				        websocket = new MozWebSocket("ws://"+baseUrl(1).split(":")[0]+"/mochat/websocketNetty/socketServer.do?"+param);
 				    } else {
