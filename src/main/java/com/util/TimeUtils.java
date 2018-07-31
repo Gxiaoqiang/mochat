@@ -9,7 +9,7 @@ import java.util.Date;
 import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
- * 时间计算工具�?
+ * 时间计算工具?
  * @author ThinkGem
  * @version 2013-11-03
  */
@@ -23,52 +23,52 @@ public class TimeUtils {
 		int second = t.get(TimeUtils.SECOND);
 		StringBuilder sb = new StringBuilder();
 		if (day > 0){
-			sb.append(day).append("�?");
+			sb.append(day).append("?");
 		}
 		if (hour > 0){
-			sb.append(hour).append("�?");
+			sb.append(hour).append("?");
 		}
 		if (minute > 0){
-			sb.append(minute).append("�?");
+			sb.append(minute).append("?");
 		}
 		if (second > 0){
-			sb.append(second).append("�?");
+			sb.append(second).append("?");
 		}
 		return sb.toString();
 	}
 	
     /**
-     * 时间字段常量，表示�?�秒�?
+     * 时间字段常量，表示?秒?
      */
     public final static int SECOND = 0;
 
     /**
-     * 时间字段常量，表示�?�分�?
+     * 时间字段常量，表示?分?
      */
     public final static int MINUTE = 1;
 
     /**
-     * 时间字段常量，表示�?�时�?
+     * 时间字段常量，表示?时?
      */
     public final static int HOUR = 2;
 
     /**
-     * 时间字段常量，表示�?�天�?
+     * 时间字段常量，表示?天?
      */
     public final static int DAY = 3;
 
     /**
-     * 各常量允许的�?大�??
+     * 各常量允许的?大??
      */
     private final int[] maxFields = { 59, 59, 23, Integer.MAX_VALUE - 1 };
 
     /**
-     * 各常量允许的�?小�??
+     * 各常量允许的?小??
      */
     private final int[] minFields = { 0, 0, 0, Integer.MIN_VALUE };
 
     /**
-     * 默认的字符串格式时间分隔�?
+     * 默认的字符串格式时间分隔?
      */
     private String timeSeparator = ":";
 
@@ -78,14 +78,14 @@ public class TimeUtils {
     private int[] fields = new int[4];
 
     /**
-     * 无参构�?�，将各字段置为 0
+     * 无参构?，将各字段置为 0
      */
     public TimeUtils() {
         this(0, 0, 0, 0);
     }
 
     /**
-     * 使用时�?�分构�?�一个时�?
+     * 使用时?分构?一个时?
      * @param hour      小时
      * @param minute    分钟
      */
@@ -94,19 +94,19 @@ public class TimeUtils {
     }
 
     /**
-     * 使用时�?�分、秒构�?�一个时�?
+     * 使用时?分、秒构?一个时?
      * @param hour      小时
      * @param minute    分钟
-     * @param second    �?
+     * @param second    ?
      */
     public TimeUtils(int hour, int minute, int second) {
         this(0, hour, minute, second);
     }
 
     /**
-     * 使用�?个字符串构�?�时�?<br/>
+     * 使用?个字符串构?时?<br/>
      * Time time = new Time("14:22:23");
-     * @param time      字符串格式的时间，默认采用�??:”作为分隔符
+     * @param time      字符串格式的时间，默认采用??:”作为分隔符
      */
     public TimeUtils(String time) {
         this(time, null);
@@ -122,7 +122,7 @@ public class TimeUtils {
     }
     
     /**
-     * 使用日期对象构�?�时�?
+     * 使用日期对象构?时?
      * @param date
      */
     public TimeUtils(Date date){
@@ -130,18 +130,18 @@ public class TimeUtils {
     }
 
     /**
-     * 使用天�?�时、分、秒构�?�时间，进行全字符的构�??
-     * @param day       �?
-     * @param hour      �?
-     * @param minute    �?
-     * @param second    �?
+     * 使用天?时、分、秒构?时间，进行全字符的构??
+     * @param day       ?
+     * @param hour      ?
+     * @param minute    ?
+     * @param second    ?
      */
     public TimeUtils(int day, int hour, int minute, int second) {
         initialize(day, hour, minute, second);
     }
 
     /**
-     * 使用�?个字符串构�?�时间，指定分隔�?<br/>
+     * 使用?个字符串构?时间，指定分隔?<br/>
      * Time time = new Time("14-22-23", "-");
      * @param time      字符串格式的时间
      */
@@ -153,9 +153,9 @@ public class TimeUtils {
     }
 
     /**
-     * 设置时间字段的�??
+     * 设置时间字段的??
      * @param field     时间字段常量
-     * @param value     时间字段的�??
+     * @param value     时间字段的??
      */
     public void set(int field, int value) {
         if(value < minFields[field]) {
@@ -171,9 +171,9 @@ public class TimeUtils {
     }
 
     /**
-     * 获得时间字段的�??
+     * 获得时间字段的??
      * @param field     时间字段常量
-     * @return          该时间字段的�?
+     * @return          该时间字段的?
      */
     public int get(int field) {
         if(field < 0 || field > fields.length - 1) {
@@ -183,8 +183,8 @@ public class TimeUtils {
     }
 
     /**
-     * 将时间进行�?�加”运算，即加上一个时�?
-     * @param time      �?要加的时�?
+     * 将时间进行?加”运算，即加上一个时?
+     * @param time      ?要加的时?
      * @return          运算后的时间
      */
     public TimeUtils addTime(TimeUtils time) {
@@ -199,13 +199,13 @@ public class TimeUtils {
     }
 
     /**
-     * 将时间进行�?�减”运算，即减去一个时�?
-     * @param time      �?要减的时�?
+     * 将时间进行?减”运算，即减去一个时?
+     * @param time      ?要减的时?
      * @return          运算后的时间
      */
     public TimeUtils subtractTime(TimeUtils time) {
     	TimeUtils result = new TimeUtils();
-        int down = 0;       // �?位标�?
+        int down = 0;       // ?位标?
         for (int i = 0, k = fields.length - 1; i < k; i++) {
             int difference = fields[i] + down;
             if (difference >= time.fields[i]) {

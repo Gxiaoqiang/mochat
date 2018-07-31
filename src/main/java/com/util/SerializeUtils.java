@@ -11,7 +11,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 
 /**
- * 序列化工�?
+ * 序列化工?
  * 
  * @project 1_bip_base
  * @version 1
@@ -28,7 +28,7 @@ public class SerializeUtils {
 			byte[] bytes = baos.toByteArray();
 			return bytes;
 		} catch (IOException e) {
-			SystemLog.err("序列化对象失�?", e);
+			SystemLog.err("序列化对象失?", e);
 			return null;
 		} finally {
 			if (oos != null) {

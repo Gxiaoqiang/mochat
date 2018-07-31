@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * Cookie工具�?
+ * Cookie工具?
  * @author gwq
  */
 public class CookieUtils {
@@ -20,7 +20,7 @@ public class CookieUtils {
 	/**
 	 * 设置 Cookie（生成时间为1天）
 	 * @param name 名称
-	 * @param value �?
+	 * @param value ?
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value) {
 		setCookie(response, name, value, 60*60*24);
@@ -29,8 +29,8 @@ public class CookieUtils {
 	/**
 	 * 设置 Cookie
 	 * @param name 名称
-	 * @param value �?
-	 * @param maxAge 生存时间（单位秒�?
+	 * @param value ?
+	 * @param maxAge 生存时间（单位秒?
 	 * @param uri 路径
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value, String path) {
@@ -40,8 +40,8 @@ public class CookieUtils {
 	/**
 	 * 设置 Cookie
 	 * @param name 名称
-	 * @param value �?
-	 * @param maxAge 生存时间（单位秒�?
+	 * @param value ?
+	 * @param maxAge 生存时间（单位秒?
 	 * @param uri 路径
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value, int maxAge) {
@@ -51,8 +51,8 @@ public class CookieUtils {
 	/**
 	 * 设置 Cookie
 	 * @param name 名称
-	 * @param value �?
-	 * @param maxAge 生存时间（单位秒�?
+	 * @param value ?
+	 * @param maxAge 生存时间（单位秒?
 	 * @param uri 路径
 	 */
 	public static void setCookie(HttpServletResponse response, String name, String value, String path, int maxAge) {
@@ -68,28 +68,28 @@ public class CookieUtils {
 	}
 	
 	/**
-	 * 获得指定Cookie的�??
+	 * 获得指定Cookie的??
 	 * @param name 名称
-	 * @return �?
+	 * @return ?
 	 */
 	public static String getCookie(HttpServletRequest request, String name) {
 		return getCookie(request, null, name, false);
 	}
 	/**
-	 * 获得指定Cookie的�?�，并删除�??
+	 * 获得指定Cookie的?，并删除??
 	 * @param name 名称
-	 * @return �?
+	 * @return ?
 	 */
 	public static String getCookie(HttpServletRequest request, HttpServletResponse response, String name) {
 		return getCookie(request, response, name, true);
 	}
 	/**
-	 * 获得指定Cookie的�??
+	 * 获得指定Cookie的??
 	 * @param request 请求对象
 	 * @param response 响应对象
 	 * @param name 名字
 	 * @param isRemove 是否移除
-	 * @return �?
+	 * @return ?
 	 */
 	public static String getCookie(HttpServletRequest request, HttpServletResponse response, String name, boolean isRemove) {
 		String value = null;

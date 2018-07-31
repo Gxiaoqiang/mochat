@@ -14,7 +14,7 @@ import org.apache.commons.lang3.StringEscapeUtils;
 
 /**
  * 封装各种格式的编码解码工具类.
- * 1.Commons-Codec�? hex/base64 编码
+ * 1.Commons-Codec? hex/base64 编码
  * 2.自制的base62 编码
  * 3.Commons-Lang的xml/html escape
  * 4.JDK提供的URLEncoder
@@ -63,7 +63,7 @@ public class Encodes {
 	}
 
 //	/**
-//	 * Base64编码, URL安全(将Base64中的URL非法字符'+'�?'/'转为'-'�?'_', 见RFC3548).
+//	 * Base64编码, URL安全(将Base64中的URL非法字符'+'?'/'转为'-'?'_', 见RFC3548).
 //	 */
 //	public static String encodeUrlSafeBase64(byte[] input) {
 //		return Base64.encodeBase64URLSafe(input);
@@ -88,7 +88,7 @@ public class Encodes {
 	}
 
 	/**
-	 * Base62编码�?
+	 * Base62编码?
 	 */
 	public static String encodeBase62(byte[] input) {
 		char[] chars = new char[input.length];

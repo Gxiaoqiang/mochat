@@ -7,7 +7,7 @@ package com.util;
  * @author wanye
  * @date Dec 14, 2008
  * @version v 1.0
- * @description 得到当前应用的系统路�?
+ * @description 得到当前应用的系统路?
  */
 public class SystemPath {
 

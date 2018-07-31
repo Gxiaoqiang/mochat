@@ -16,7 +16,7 @@ import java.io.InputStreamReader;
 public class MacUtils {
 
 	/**
-	 * 获取当前操作系统名称. return 操作系统名称 例如:windows,Linux,Unix�?.
+	 * 获取当前操作系统名称. return 操作系统名称 例如:windows,Linux,Unix?.
 	 */
 	public static String getOSName() {
 		return System.getProperty("os.name").toLowerCase();
@@ -33,7 +33,7 @@ public class MacUtils {
 		Process process = null;
 		try {
 			/**
-			 * Unix下的命令，一般取eth0作为本地主网�? 显示信息中包含有mac地址信息
+			 * Unix下的命令，一般取eth0作为本地主网? 显示信息中包含有mac地址信息
 			 */
 			process = Runtime.getRuntime().exec("ifconfig eth0");
 			bufferedReader = new BufferedReader(new InputStreamReader(
@@ -46,11 +46,11 @@ public class MacUtils {
 				 */
 				index = line.toLowerCase().indexOf("hwaddr");
 				/**
-				 * 找到�?
+				 * 找到?
 				 */
 				if (index != -1) {
 					/**
-					 * 取出mac地址并去�?2边空�?
+					 * 取出mac地址并去?2边空?
 					 */
 					mac = line.substring(index + "hwaddr".length() + 1).trim();
 					break;
@@ -84,7 +84,7 @@ public class MacUtils {
 		Process process = null;
 		try {
 			/**
-			 * linux下的命令，一般取eth0作为本地主网�? 显示信息中包含有mac地址信息
+			 * linux下的命令，一般取eth0作为本地主网? 显示信息中包含有mac地址信息
 			 */
 			process = Runtime.getRuntime().exec("ifconfig eth0");
 			bufferedReader = new BufferedReader(new InputStreamReader(
@@ -94,11 +94,11 @@ public class MacUtils {
 			while ((line = bufferedReader.readLine()) != null) {
 				index = line.toLowerCase().indexOf("硬件地址");
 				/**
-				 * 找到�?
+				 * 找到?
 				 */
 				if (index != -1) {
 					/**
-					 * 取出mac地址并去�?2边空�?
+					 * 取出mac地址并去?2边空?
 					 */
 					mac = line.substring(index + 4).trim();
 					break;
@@ -153,7 +153,7 @@ public class MacUtils {
 					index = line.indexOf(":");
 					if (index != -1) {
 						/**
-						 * 取出mac地址并去�?2边空�?
+						 * 取出mac地址并去?2边空?
 						 */
 						mac = line.substring(index + 1).trim();
 					}
@@ -164,7 +164,7 @@ public class MacUtils {
 					index = line.indexOf(":");
 					if (index != -1) {
 						/**
-						 * 取出mac地址并去�?2边空�?
+						 * 取出mac地址并去?2边空?
 						 */
 						mac = line.substring(index + 1).trim();
 					}
